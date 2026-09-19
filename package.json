@@ -1,0 +1,39 @@
+{
+  "name": "quickshare-qr",
+  "version": "1.0.0",
+  "description": "Instant, zero-config local Wi-Fi file sharing from terminal to phone via terminal QR code and sleek web UI.",
+  "type": "module",
+  "main": "src/server.js",
+  "bin": {
+    "quickshare": "./bin/quickshare.js"
+  },
+  "scripts": {
+    "start": "node ./bin/quickshare.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahdyarmonfared/quickshare-qr.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mahdyarmonfared/quickshare-qr/issues"
+  },
+  "homepage": "https://github.com/mahdyarmonfared/quickshare-qr#readme",
+  "keywords": [
+    "cli",
+    "file-transfer",
+    "qr-code",
+    "wifi-share",
+    "local-network",
+    "nodejs",
+    "developer-tools"
+  ],
+  "author": "Mahdyar Monfared (https://github.com/mahdyarmonfared)",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "ora": "^8.2.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
