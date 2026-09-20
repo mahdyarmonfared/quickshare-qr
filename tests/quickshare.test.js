@@ -6,7 +6,7 @@ import os from 'node:os';
 import http from 'node:http';
 import { getLocalIpAddress } from '../src/network.js';
 import { formatBytes } from '../src/ui.js';
-import { createSharingServer } from '../src/server.js';
+import { createSharingServer, buildContentDisposition } from '../src/server.js';
 
 test('getLocalIpAddress returns valid IPv4 address', () => {
   const ip = getLocalIpAddress();
@@ -70,3 +70,40 @@ test('QuickShare server full lifecycle: landing page and download stream', async
     await fs.unlink(tempFile).catch(() => {});
   }
 });
+
+test('buildContentDisposition adheres to RFC 5987 / RFC 6266', () => {
+  const resultAscii = buildContentDisposition('simple.txt');
+  assert.equal(resultAscii, `attachment; filename="simple.txt"; filename*=UTF-8''simple.txt`);
+
+  const resultUnicode = buildContentDisposition('گزارش نهایی.pdf');
+  assert.ok(resultUnicode.includes('filename*=UTF-8\'\'%DA%AF%D8%B2%D8%A7%D8%B1%D8%B4%20%D9%86%D9%87%D8%A7%DB%8C%DB%8C.pdf'));
+});
+
+test('QuickShare server automatically increments port on EADDRINUSE', async () => {
+  const tempFile = path.join(os.tmpdir(), `quickshare-port-test-${Date.now()}.txt`);
+  await fs.writeFile(tempFile, 'test port collision', 'utf8');
+
+  // Start a dummy blocker server on a known port
+  const blocker = http.createServer((req, res) => res.end('occupied'));
+  await new Promise((resolve) => blocker.listen(0, '0.0.0.0', resolve));
+  const occupiedPort = blocker.address().port;
+
+  let secondaryServer = null;
+  try {
+    // Attempt to start QuickShare on occupiedPort
+    const { server, actualPort } = await createSharingServer({
+      filePath: tempFile,
+      port: occupiedPort
+    });
+    secondaryServer = server;
+
+    assert.equal(actualPort, occupiedPort + 1, 'Server should have retried and bound to next available port');
+  } finally {
+    blocker.close();
+    if (secondaryServer) {
+      secondaryServer.close();
+    }
+    await fs.unlink(tempFile).catch(() => {});
+  }
+});
+

@@ -7,6 +7,16 @@ import { formatBytes } from './ui.js';
 import { getLocalIpAddress } from './network.js';
 
 /**
+ * Encodes Content-Disposition according to RFC 5987 / RFC 6266
+ * Supports Unicode/UTF-8 filenames across modern and legacy mobile browsers
+ */
+export function buildContentDisposition(fileName) {
+  const asciiFallback = fileName.replace(/[^\x20-\x7E]/g, '_').replace(/["\\]/g, '');
+  const encoded = encodeURIComponent(fileName);
+  return `attachment; filename="${asciiFallback}"; filename*=UTF-8''${encoded}`;
+}
+
+/**
  * Creates and starts local HTTP transfer server
  */
 export function createSharingServer({ filePath, port = 3000, once = false, onReady = null }) {
@@ -37,7 +47,7 @@ export function createSharingServer({ filePath, port = 3000, once = false, onRea
     // 2. Direct File Download Stream
     if (url.pathname === '/download') {
       res.writeHead(200, {
-        'Content-Disposition': `attachment; filename="${encodeURIComponent(fileName)}"`,
+        'Content-Disposition': buildContentDisposition(fileName),
         'Content-Type': 'application/octet-stream',
         'Content-Length': stat.size
       });
@@ -55,6 +65,13 @@ export function createSharingServer({ filePath, port = 3000, once = false, onRea
         }
       });
 
+      // Cleanup stream immediately if client disconnects early
+      res.on('close', () => {
+        if (!res.writableEnded) {
+          fileStream.destroy();
+        }
+      });
+
       fileStream.on('error', (err) => {
         console.error(chalk.red(`  File stream error: ${err.message}`));
         res.destroy();
@@ -68,7 +85,15 @@ export function createSharingServer({ filePath, port = 3000, once = false, onRea
   });
 
   return new Promise((resolve, reject) => {
-    server.listen(port, '0.0.0.0', () => {
+    let currentPort = port;
+    let retries = 0;
+    const maxRetries = 10;
+
+    function listen() {
+      server.listen(currentPort, '0.0.0.0');
+    }
+
+    server.once('listening', () => {
       const actualPort = server.address().port;
       const hostIp = getLocalIpAddress();
       const shareUrl = `http://${hostIp}:${actualPort}`;
@@ -87,7 +112,15 @@ export function createSharingServer({ filePath, port = 3000, once = false, onRea
     });
 
     server.on('error', (err) => {
-      reject(err);
+      if (err.code === 'EADDRINUSE' && currentPort !== 0 && retries < maxRetries) {
+        retries++;
+        currentPort++;
+        listen();
+      } else {
+        reject(err);
+      }
     });
+
+    listen();
   });
 }
