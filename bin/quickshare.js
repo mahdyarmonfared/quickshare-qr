@@ -7,12 +7,13 @@ import chalk from 'chalk';
 import { createSharingServer } from '../src/server.js';
 import { printSharingSession } from '../src/ui.js';
 
+const pkg = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf-8'));
 const program = new Command();
 
 program
   .name('quickshare')
   .description('⚡ Instant local Wi-Fi file sharing from terminal to phone via QR code.')
-  .version('1.0.0')
+  .version(pkg.version)
   .argument('<file>', 'Path of the file you want to share')
   .option('-p, --port <number>', 'Custom port to run the server on (default: 3000 or next available)', '3000')
   .option('-o, --once', 'Automatically shut down the server after the first download completes')

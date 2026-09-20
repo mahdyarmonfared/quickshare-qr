@@ -1,6 +1,6 @@
 {
   "name": "quickshare-qr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Instant, zero-config local Wi-Fi file sharing from terminal to phone via terminal QR code and sleek web UI.",
   "type": "module",
   "main": "src/server.js",
