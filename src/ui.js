@@ -16,19 +16,17 @@ export function formatBytes(bytes) {
  * Render terminal QR code and connection instructions
  */
 export function printSharingSession({ url, fileName, fileSize, hostIp, port }) {
-  console.log('\n' + chalk.bold.cyan('━'.repeat(55)));
-  console.log(chalk.bold.cyan('  ⚡ QuickShare-QR • Local Wi-Fi File Transfer'));
-  console.log(chalk.bold.cyan('━'.repeat(55)));
+  console.log('\n' + chalk.dim('╭─ ') + chalk.bold.cyan('⚡ QuickShare-QR ') + chalk.bgCyan.black(' READY ') + chalk.dim(' ' + '─'.repeat(24) + '╮'));
+  console.log(chalk.dim('│') + `  📦 ${chalk.bold('File')}         : ${chalk.bold.white(fileName)}`);
+  console.log(chalk.dim('│') + `  💾 ${chalk.bold('Size')}         : ${chalk.bold.green(formatBytes(fileSize))}`);
+  console.log(chalk.dim('│') + `  🌐 ${chalk.bold('Direct URL')}   : ${chalk.bold.underline.cyan(url)}`);
+  console.log(chalk.dim('│') + `  📶 ${chalk.bold('Local Wi-Fi')}  : ${chalk.dim('Phone and PC must be on same Wi-Fi')}`);
+  console.log(chalk.dim('╰' + '─'.repeat(51) + '╯\n'));
 
-  console.log(`\n  📦 ${chalk.bold('File')}         : ${chalk.bold.yellow(fileName)}`);
-  console.log(`  💾 ${chalk.bold('Size')}         : ${chalk.bold.green(formatBytes(fileSize))}`);
-  console.log(`  🌐 ${chalk.bold('Local URL')}     : ${chalk.bold.underline.blue(url)}`);
-  console.log(`  📶 ${chalk.bold('Network')}      : ${chalk.gray('Make sure your phone is on the same Wi-Fi')}\n`);
-
-  console.log(chalk.gray('  Scan this QR Code with your mobile camera:\n'));
+  console.log(`  ${chalk.cyan('📱 Scan QR Code with your phone camera:')}\n`);
 
   // Generate QR code directly in terminal
   qrcode.generate(url, { small: true });
 
-  console.log('\n' + chalk.gray('  Press ') + chalk.bold.red('Ctrl+C') + chalk.gray(' to stop the server when finished.\n'));
+  console.log(`\n  ${chalk.dim('💡 Tip:')} Press ${chalk.red.bold('Ctrl+C')} to shut down server when finished.\n`);
 }
