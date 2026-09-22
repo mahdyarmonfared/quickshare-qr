@@ -52,29 +52,31 @@ Laptop Terminal:                           Mobile Phone:
 
 ## 🚀 Quick Start
 
-### Run Instantly via `npx` (No Install Required)
+### Installation & Global Setup
 
 ```bash
-# Share any file instantly over local Wi-Fi
-npx quickshare-qr presentation.pdf
-
-# Exit immediately once phone download completes
-npx quickshare-qr video.mp4 --once
-```
-
-### Global Installation
-
-```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/mahdyarmonfared/quickshare-qr.git
 cd quickshare-qr
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Link globally (optional)
+# 3. Link globally (so you can use `quickshare` anywhere in your terminal)
 npm link
 ```
+
+### Running QuickShare
+
+```bash
+# Share any file instantly over local Wi-Fi
+quickshare presentation.pdf
+
+# Exit immediately once phone download completes
+quickshare video.mp4 --once
+```
+
+> 💡 **Tip:** You can also run it directly inside the repo without linking using `node bin/quickshare.js [file]`.
 
 ---
 
