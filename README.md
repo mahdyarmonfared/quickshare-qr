@@ -41,8 +41,10 @@ Laptop Terminal:                           Mobile Phone:
 
 - ⚡ **Zero-Config:** Automatically detects your local Wi-Fi IP address (`192.168.x.x`).
 - 📱 **Terminal QR Code:** Scan directly with your iPhone or Android camera app.
-- 🎨 **Sleek Mobile Landing Page:** Responsive dark-mode interface with file metadata and download button.
-- 🌊 **Stream-Based Transfer:** Handles gigabyte-sized files smoothly without high RAM usage.
+- 🎨 **Sleek Mobile Landing Page:** Responsive dark-mode interface with file metadata and one-tap download.
+- 🌊 **Stream-Based Transfer:** Handles multi-gigabyte videos and archives smoothly without high RAM usage.
+- 🌐 **RFC 5987 / UTF-8 Unicode Support:** Full international filename support (Persian, Arabic, Japanese, emojis) without mangled character downloads.
+- 🔄 **Smart Port Fallback:** Automatically increments port (`3001`, `3002`...) if port `3000` is already in use (`EADDRINUSE` safe).
 - 🔒 **100% Private & Local:** Data never leaves your local Wi-Fi network.
 - ⏱️ **Single-Use Mode (`-o, --once`):** Automatically terminates the server after the download finishes.
 
@@ -50,7 +52,17 @@ Laptop Terminal:                           Mobile Phone:
 
 ## 🚀 Quick Start
 
-### Installation
+### Run Instantly via `npx` (No Install Required)
+
+```bash
+# Share any file instantly over local Wi-Fi
+npx quickshare-qr presentation.pdf
+
+# Exit immediately once phone download completes
+npx quickshare-qr video.mp4 --once
+```
+
+### Global Installation
 
 ```bash
 # Clone the repository
@@ -62,16 +74,6 @@ npm install
 
 # Link globally (optional)
 npm link
-```
-
-### Direct Run
-
-```bash
-# Share any file instantly
-node bin/quickshare.js /path/to/my-video.mp4
-
-# Or if linked globally:
-quickshare document.pdf
 ```
 
 ---
