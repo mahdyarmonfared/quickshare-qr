@@ -107,3 +107,99 @@ test('QuickShare server automatically increments port on EADDRINUSE', async () =
   }
 });
 
+test('QuickShare server directory streaming zip archive', async () => {
+  const tempDir = path.join(os.tmpdir(), `quickshare-dir-test-${Date.now()}`);
+  await fs.mkdir(tempDir, { recursive: true });
+  await fs.writeFile(path.join(tempDir, 'file1.txt'), 'content 1', 'utf8');
+  await fs.writeFile(path.join(tempDir, 'file2.txt'), 'content 2', 'utf8');
+
+  let serverInstance = null;
+  try {
+    const { server, actualPort } = await createSharingServer({
+      filePath: tempDir,
+      port: 0
+    });
+    serverInstance = server;
+
+    const res = await fetch(`http://127.0.0.1:${actualPort}/download`);
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get('content-type'), 'application/zip');
+    const disposition = res.headers.get('content-disposition');
+    assert.ok(disposition.includes(path.basename(tempDir) + '.zip'));
+
+    const arrayBuf = await res.arrayBuffer();
+    assert.ok(arrayBuf.byteLength > 0, 'Zip buffer should not be empty');
+  } finally {
+    if (serverInstance) serverInstance.close();
+    await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+  }
+});
+
+test('QuickShare bi-directional phone-to-laptop upload endpoint', async () => {
+  const uploadDir = path.join(os.tmpdir(), `quickshare-uploads-${Date.now()}`);
+  await fs.mkdir(uploadDir, { recursive: true });
+
+  let serverInstance = null;
+  try {
+    const { server, actualPort } = await createSharingServer({
+      port: 0,
+      uploadDir
+    });
+    serverInstance = server;
+
+    const formData = new FormData();
+    formData.append('file', new Blob(['sample phone photo bytes']), 'phone-photo.jpg');
+
+    const res = await fetch(`http://127.0.0.1:${actualPort}/api/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.success, true);
+    assert.equal(body.files.length, 1);
+    assert.equal(body.files[0].fileName, 'phone-photo.jpg');
+
+    const savedContent = await fs.readFile(path.join(uploadDir, 'phone-photo.jpg'), 'utf8');
+    assert.equal(savedContent, 'sample phone photo bytes');
+  } finally {
+    if (serverInstance) serverInstance.close();
+    await fs.rm(uploadDir, { recursive: true, force: true }).catch(() => {});
+  }
+});
+
+test('QuickShare SVG QR code generation endpoint', async () => {
+  let serverInstance = null;
+  try {
+    const { server, actualPort } = await createSharingServer({ port: 0 });
+    serverInstance = server;
+
+    const res = await fetch(`http://127.0.0.1:${actualPort}/api/qr?url=http://example.com/test`);
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get('content-type'), 'image/svg+xml');
+    const svg = await res.text();
+    assert.ok(svg.startsWith('<svg'), 'Response must be valid SVG');
+  } finally {
+    if (serverInstance) serverInstance.close();
+  }
+});
+
+test('QuickShare Web Hub mode renders dashboard when no file is passed', async () => {
+  let serverInstance = null;
+  try {
+    const { server, actualPort } = await createSharingServer({ port: 0 });
+    serverInstance = server;
+
+    const res = await fetch(`http://127.0.0.1:${actualPort}/`);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get('content-type'), /text\/html/);
+    const html = await res.text();
+    assert.ok(html.includes('QuickShare-QR Web Hub'));
+    assert.ok(html.includes('Share from Laptop to Phone'));
+    assert.ok(html.includes('Receive from Phone to Laptop'));
+  } finally {
+    if (serverInstance) serverInstance.close();
+  }
+});
+
+

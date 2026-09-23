@@ -31,9 +31,12 @@
   "author": "Mahdyar Monfared (https://github.com/mahdyarmonfared)",
   "license": "MIT",
   "dependencies": {
+    "archiver": "^8.0.0",
+    "busboy": "^1.6.0",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
     "ora": "^8.2.0",
+    "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0"
   }
 }

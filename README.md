@@ -2,7 +2,7 @@
 
 # ⚡ QuickShare-QR
 
-**Instant, zero-config local Wi-Fi file sharing from terminal to phone via terminal QR codes.**
+**Instant, zero-config local Wi-Fi file sharing between laptop and mobile via terminal & on-screen QR codes.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org)
@@ -15,108 +15,118 @@
 
 ## 🧐 Why QuickShare-QR?
 
-How often do you need to transfer a single video, PDF, or zip file from your laptop to your smartphone?
+How often do you need to transfer a video, document, or entire folder between your laptop and smartphone?
 
-- Plugging in a USB cable is annoying.
-- Sending files through Telegram or WhatsApp compresses your media and uploads your private data to external servers.
-- Cloud storage services (Google Drive / Dropbox) require uploading to the web, waiting, and creating sharing links.
+- 🔌 **Cables:** Plugging in a USB cable and navigating MTP/Finder is cumbersome.
+- 💬 **Messaging Apps:** Sending files through Telegram or WhatsApp compresses high-res media, has file size limits, and uploads your private data to external servers.
+- ☁️ **Cloud Storage:** Google Drive or Dropbox require uploading to the internet first, waiting for cloud sync, and generating links.
 
-**QuickShare-QR** spins up a micro-server on your local Wi-Fi network, prints a clean QR code right in your terminal, and lets your phone download the file at maximum local network speed. Zero cables, zero internet bandwidth, 100% private.
+**QuickShare-QR** spins up a micro-server on your local Wi-Fi network, prints a QR code in your terminal or on your screen, and enables ultra-fast, local bi-directional transfers. Zero internet bandwidth consumed, 100% private.
 
 ```
-Laptop Terminal:                           Mobile Phone:
-┌──────────────────────────────┐           ┌────────────────────────┐
-│ $ quickshare video.mp4       │           │ 📷 Scan QR Code        │
-│                              │           │           │            │
-│ ▄▄▄▄▄▄▄ ▄ ▄▄▄▄ ▄▄▄▄▄▄▄       │  ──────►  │           ▼            │
-│ █ ▄▄▄ █ █ ▄▀▄█ █ ▄▄▄ █       │           │ 📱 Open Local Page     │
-│ █ ███ █ █▄█ ▄▀ █ ███ █       │           │ 📦 Download (Max Speed)│
-│ ▀▀▀▀▀▀▀ ▀ ▀ ▀  ▀▀▀▀▀▀▀       │           └────────────────────────┘
-└──────────────────────────────┘
+Laptop Terminal / Web Hub:                   Mobile Phone (Same Wi-Fi):
+┌──────────────────────────────┐             ┌────────────────────────┐
+│ $ quickshare video.mp4       │             │ 📷 Scan QR Code        │
+│ or $ quickshare web          │             │           │            │
+│                              │  ────────►  │           ▼            │
+│ ▄▄▄▄▄▄▄ ▄ ▄▄▄▄ ▄▄▄▄▄▄▄       │             │ 📱 One-Tap Download    │
+│ █ ▄▄▄ █ █ ▄▀▄█ █ ▄▄▄ █       │  ◄────────  │ 📸 Upload to Laptop    │
+│ ▀▀▀▀▀▀▀ ▀ ▀ ▀  ▀▀▀▀▀▀▀       │             │ (Saves to ~/Downloads) │
+└──────────────────────────────┘             └────────────────────────┘
 ```
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- ⚡ **Zero-Config:** Automatically detects your local Wi-Fi IP address (`192.168.x.x`).
-- 📱 **Terminal QR Code:** Scan directly with your iPhone or Android camera app.
-- 🎨 **Sleek Mobile Landing Page:** Responsive dark-mode interface with file metadata and one-tap download.
-- 🌊 **Stream-Based Transfer:** Handles multi-gigabyte videos and archives smoothly without high RAM usage.
-- 🌐 **RFC 5987 / UTF-8 Unicode Support:** Full international filename support (Persian, Arabic, Japanese, emojis) without mangled character downloads.
-- 🔄 **Smart Port Fallback:** Automatically increments port (`3004`, `3005`...) if port `3003` is already in use (`EADDRINUSE` safe).
-- 🔒 **100% Private & Local:** Data never leaves your local Wi-Fi network.
-- ⏱️ **Single-Use Mode (`-o, --once`):** Automatically terminates the server after the download finishes.
+- ⚡ **Zero-Config:** Automatically detects your active physical Wi-Fi IP (`192.168.x.x` or `10.x.x.x`), skipping VPN/virtual interfaces.
+- 📱 **Terminal QR Code:** Instant scan directly from your terminal with iPhone / Android camera apps.
+- 🖥️ **Desktop Web Hub (`quickshare web`):** Launch an interactive web dashboard on `localhost:3003` with on-screen SVG QR code, drag-and-drop file sharing, and live transfer feeds.
+- 📂 **Directory Auto-Zipping:** Pass any folder (`quickshare ./my-project`), and QuickShare will zip and stream it on the fly with zero temporary disk usage.
+- 🔄 **Bi-Directional Transfer:** Mobile users can also upload photos, videos, and documents directly back to your laptop's `~/Downloads` folder.
+- 🌊 **Zero-RAM Streaming:** Built on Node.js streams and busboy; effortlessly handles multi-gigabyte 4K videos and archives without choking memory.
+- 🌐 **RFC 5987 / UTF-8 Unicode Support:** Full international filename support (Persian, Arabic, Japanese, emojis) with no mangled download names.
+- 🔄 **Smart Port Fallback:** Automatically increments port (`3004`, `3005`...) if default port `3003` is already occupied.
+- ⏱️ **Single-Use Mode (`-o, --once`):** Automatically shuts down the server once the download finishes.
 
 ---
 
 ## 🚀 Quick Start
 
-### Installation & Global Setup
+### Installation
 
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/mahdyarmonfared/quickshare-qr.git
 cd quickshare-qr
 
-# 2. Install dependencies
+# Install dependencies
 npm install
 
-# 3. Link globally (so you can use `quickshare` anywhere in your terminal)
+# Link globally for terminal access
 npm link
 ```
 
-### Running QuickShare
+### Instant Usage
 
 ```bash
-# Share any file instantly over local Wi-Fi
-quickshare presentation.pdf
+# 1. Share a single file (prints QR in terminal)
+quickshare video.mp4
 
-# Exit immediately once phone download completes
-quickshare video.mp4 --once
+# 2. Share an entire folder (automatically zipped on the fly!)
+quickshare ./documents
+
+# 3. Launch the desktop Web Hub on localhost:3003 (drag & drop files)
+quickshare web
+
+# 4. Exit immediately after first mobile download
+quickshare presentation.pdf --once
 ```
-
-> 💡 **Tip:** You can also run it directly inside the repo without linking using `node bin/quickshare.js [file]`.
 
 ---
 
 ## 📖 CLI Usage & Options
 
 ```bash
-quickshare <file> [options]
+quickshare [target] [options]
 ```
+
+### Arguments
+
+| Argument | Description | Default |
+| :--- | :--- | :--- |
+| `[target]` | File or folder path to share | If omitted, starts in Web Hub mode |
 
 ### Options
 
 | Flag | Shorthand | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `--port <number>` | `-p` | Custom port to run the server on | `3003` |
-| `--once` | `-o` | Shut down server automatically after 1 download | `false` |
+| `--port <number>` | `-p` | Custom port to run server on | `3003` |
+| `--once` | `-o` | Shut down server automatically after first download | `false` |
+| `--dir <folder>` | `-d` | Target folder for incoming phone uploads | `~/Downloads` |
+| `--web` | | Explicitly launch Web Hub mode | `false` |
 | `--help` | `-h` | Display help screen | |
 | `--version` | `-V` | Output version number | |
 
-### Examples
+---
 
-#### 1. Share a photo to your phone:
-```bash
-quickshare photo.jpg
-```
+## 🌐 Web Hub & Mobile Portal
 
-#### 2. Send an archive and exit immediately after download:
-```bash
-quickshare project.zip --once
-```
+### 💻 Laptop Web Hub (`http://localhost:3003`)
+- Drag and drop any file or folder from your computer.
+- Live, crisp on-screen SVG QR code for mobile scanning.
+- Copyable local Wi-Fi URL.
+- Live Server-Sent Events (SSE) feed notifying you when files are downloaded or uploaded.
 
-#### 3. Run on a specific port:
-```bash
-quickshare invoice.pdf -p 8080
-```
+### 📱 Mobile Download & Upload Portal
+- **Receive from Laptop tab:** View file icon, formatted size, and tap "Download to Device".
+- **Send to Laptop tab:** Select photos, videos, or documents on your phone and upload them at maximum Wi-Fi speed directly into your laptop's `Downloads` folder.
 
 ---
 
 ## 🧪 Running Tests
 
-QuickShare-QR uses Node's native test runner (`node:test`):
+QuickShare-QR includes unit and integration tests using Node's native test runner (`node:test`):
 
 ```bash
 npm test
@@ -124,12 +134,6 @@ npm test
 
 ---
 
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Check the [contributing guidelines](CONTRIBUTING.md) and [issues page](https://github.com/mahdyarmonfared/quickshare-qr/issues).
-
----
-
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is open-source under the [MIT License](LICENSE).
