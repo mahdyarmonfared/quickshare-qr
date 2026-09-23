@@ -15,7 +15,7 @@ program
   .description('⚡ Instant local Wi-Fi file sharing from terminal to phone via QR code.')
   .version(pkg.version)
   .argument('<file>', 'Path of the file you want to share')
-  .option('-p, --port <number>', 'Custom port to run the server on (default: 3000 or next available)', '3000')
+  .option('-p, --port <number>', 'Custom port to run the server on (default: 3003 or next available)', '3003')
   .option('-o, --once', 'Automatically shut down the server after the first download completes')
   .action(async (filePath, options) => {
     const targetFile = path.resolve(filePath);
@@ -34,7 +34,7 @@ program
 
     let port = parseInt(options.port, 10);
     if (isNaN(port) || port < 1 || port > 65535) {
-      port = 3000;
+      port = 3003;
     }
 
     try {

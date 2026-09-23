@@ -44,7 +44,7 @@ Laptop Terminal:                           Mobile Phone:
 - 🎨 **Sleek Mobile Landing Page:** Responsive dark-mode interface with file metadata and one-tap download.
 - 🌊 **Stream-Based Transfer:** Handles multi-gigabyte videos and archives smoothly without high RAM usage.
 - 🌐 **RFC 5987 / UTF-8 Unicode Support:** Full international filename support (Persian, Arabic, Japanese, emojis) without mangled character downloads.
-- 🔄 **Smart Port Fallback:** Automatically increments port (`3001`, `3002`...) if port `3000` is already in use (`EADDRINUSE` safe).
+- 🔄 **Smart Port Fallback:** Automatically increments port (`3004`, `3005`...) if port `3003` is already in use (`EADDRINUSE` safe).
 - 🔒 **100% Private & Local:** Data never leaves your local Wi-Fi network.
 - ⏱️ **Single-Use Mode (`-o, --once`):** Automatically terminates the server after the download finishes.
 
@@ -90,7 +90,7 @@ quickshare <file> [options]
 
 | Flag | Shorthand | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `--port <number>` | `-p` | Custom port to run the server on | `3000` |
+| `--port <number>` | `-p` | Custom port to run the server on | `3003` |
 | `--once` | `-o` | Shut down server automatically after 1 download | `false` |
 | `--help` | `-h` | Display help screen | |
 | `--version` | `-V` | Output version number | |

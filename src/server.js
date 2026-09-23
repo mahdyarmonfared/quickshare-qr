@@ -19,7 +19,7 @@ export function buildContentDisposition(fileName) {
 /**
  * Creates and starts local HTTP transfer server
  */
-export function createSharingServer({ filePath, port = 3000, once = false, onReady = null }) {
+export function createSharingServer({ filePath, port = 3003, once = false, onReady = null }) {
   const absolutePath = path.resolve(filePath);
   const fileName = path.basename(absolutePath);
   const ext = path.extname(fileName).replace('.', '') || 'bin';
