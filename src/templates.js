@@ -88,7 +88,7 @@ export function renderDownloadPage({ fileName, fileSizeFormatted, extension, isD
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>QuickShare • ${hasFile ? fileName : 'Local Transfer'}</title>
   <style>
     :root {
@@ -362,6 +362,76 @@ export function renderDownloadPage({ fileName, fileSizeFormatted, extension, isD
       justify-content: center;
       gap: 8px;
       text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 16px 12px;
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+      }
+      .card {
+        padding: 26px 16px 22px;
+        border-radius: 20px;
+      }
+      .icon-wrapper {
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: 18px;
+        line-height: 1.3;
+        margin-bottom: 8px;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .meta-pill {
+        margin-bottom: 20px;
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+      .nav-tabs {
+        margin-bottom: 16px;
+      }
+      .tab-btn {
+        font-size: 12px;
+        padding: 8px 6px;
+      }
+      .btn-action {
+        font-size: 15px;
+        min-height: 48px;
+        padding: 12px 18px;
+        border-radius: 14px;
+      }
+      .upload-zone {
+        padding: 20px 12px;
+        border-radius: 14px;
+      }
+      .upload-title {
+        font-size: 14px;
+      }
+      .upload-subtitle {
+        font-size: 11.5px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .card {
+        padding: 20px 12px 16px;
+      }
+      h1 {
+        font-size: 16px;
+      }
+      .tab-btn {
+        font-size: 11px;
+        padding: 6px 4px;
+      }
+      .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+      }
     }
   </style>
 </head>
@@ -901,6 +971,77 @@ export function renderWebHubPage({ hostIp, port, shareUrl, currentShare }) {
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       display: none;
       z-index: 1000;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px 12px;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+      }
+      .status-pill {
+        align-self: flex-start;
+        font-size: 11.5px;
+        padding: 4px 10px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .panel {
+        padding: 18px 14px;
+        border-radius: 16px;
+      }
+      .dropzone {
+        padding: 20px 12px;
+      }
+      .drop-btn-row {
+        flex-direction: column;
+        width: 100%;
+      }
+      .btn-sm {
+        width: 100%;
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+      .qr-svg-wrapper {
+        width: 160px;
+        height: 160px;
+      }
+      .qr-url-row {
+        font-size: 11px;
+        padding: 6px 10px;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .toast {
+        right: 14px;
+        left: 14px;
+        bottom: 16px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .logo-title {
+        font-size: 17px;
+      }
+      .logo-sub {
+        font-size: 11px;
+      }
+      .qr-svg-wrapper {
+        width: 140px;
+        height: 140px;
+        padding: 8px;
+      }
+      .panel-title {
+        font-size: 15px;
+      }
     }
   </style>
 </head>
