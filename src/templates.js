@@ -538,7 +538,7 @@ export function renderDownloadPage({ fileName, fileSizeFormatted, extension, isD
         const dlText = document.getElementById('dl-text');
         const dlIcon = document.getElementById('dl-icon');
         dlBtn.classList.add('success');
-        dlText.textContent = 'Transfer Started...';
+        dlText.textContent = 'Transfer Started…';
         dlIcon.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
         setTimeout(() => {
           dlBtn.classList.remove('success');
@@ -582,10 +582,10 @@ export function renderDownloadPage({ fileName, fileSizeFormatted, extension, isD
       }
 
       uploadBtn.disabled = true;
-      uploadBtn.textContent = 'Sending to Laptop...';
+      uploadBtn.textContent = 'Sending to Laptop…';
       progressBar.style.display = 'block';
       progressFill.style.width = '0%';
-      statusText.textContent = 'Uploading over Wi-Fi...';
+      statusText.textContent = 'Uploading over Wi-Fi…';
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', '/api/upload');
@@ -1156,11 +1156,28 @@ export function renderWebHubPage({ hostIp, port, shareUrl, currentShare }) {
     }
     loadQrCode(shareUrl);
 
-    // Copy URL
-    document.getElementById('hub-btn-copy').addEventListener('click', () => {
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        showToast('📋 Direct URL copied to clipboard!');
+    // Copy URL with visual button feedback
+    const copyBtn = document.getElementById('hub-btn-copy');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showToast('📋 Direct URL copied to clipboard!');
+          const origText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '✔ Copied!';
+          copyBtn.style.color = '#38bdf8';
+          setTimeout(() => {
+            copyBtn.innerHTML = origText;
+            copyBtn.style.color = '';
+          }, 2000);
+        });
       });
+    }
+
+    // Dismiss toast on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toast.style.display !== 'none') {
+        toast.style.display = 'none';
+      }
     });
 
     // File selection
